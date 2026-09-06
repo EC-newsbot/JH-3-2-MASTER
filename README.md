@@ -111,11 +111,16 @@ cd JH-3-2-frontend
 
 ## 제출 스크린샷
 
+## 제출 스크린샷
+
 ### 데이터 요약이 보이는 채팅 화면
-(스크린샷 추가 예정)
+![채팅 화면](./screenshots/chat.png)
 
 ### 데이터 관리 화면
-(스크린샷 추가 예정)
+![데이터 관리 화면](./screenshots/data-management.png)
 
 ### 대화 기록 화면
-(스크린샷 추가 예정)
+![대화 기록 화면](./screenshots/history.png)
+
+### 요약 정보 화면
+![요약 정보 화면](./screenshots/summary.png)
