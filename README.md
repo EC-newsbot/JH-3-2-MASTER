@@ -113,6 +113,38 @@ GPT가 결과를 바탕으로 최종 자연어 답변 생성
 
 ## 로컬 실행 방법
 
+## 데이터 갱신 방법
+
+본 프로젝트의 코인 데이터는 배치 스크립트를 실행한 시점(2026-09-06) 기준으로 1회 수집되었으며, 이후 자동으로 갱신되지 않습니다. 최신 데이터가 필요할 경우 아래 방법을 사용할 수 있습니다.
+
+### 1) 수동 갱신
+
+로컬 환경에서 아래 명령어를 실행하면, 실행 시점 기준 최신 데이터까지 Firestore에 추가됩니다. (이미 저장된 날짜는 중복 저장되지 않도록 처리되어 있어, 여러 번 실행해도 안전합니다.)
+
+```bash
+cd JH-CS-3-2
+venv\Scripts\Activate.ps1   # Windows
+
+# 1) 코인 가격 데이터(BTC, ETH, HYPE, XRP) 최신화
+python -m scripts.seed_coin_data
+
+# 2) 변동성 상위 10개 코인 재계산
+python -m scripts.calculate_top_movers
+```
+
+실행 후, `/api/data/summary`와 `/api/data/top-movers` API가 실행 시점 기준 최신 데이터를 반환합니다.
+
+### 2) 자동 갱신 (참고용, 본 프로젝트에는 미적용)
+
+위 스크립트를 매일 자동으로 실행하려면, Render의 **Cron Job** 기능을 이용해 아래처럼 설정할 수 있습니다.
+
+1. Render 대시보드에서 **New + → Cron Job** 생성 후 동일한 백엔드 저장소 연결
+2. Command: `python -m scripts.seed_coin_data && python -m scripts.calculate_top_movers`
+3. Schedule을 원하는 주기(예: 매일 자정)로 설정
+4. 웹 서비스와 동일한 환경변수(`OPENAI_API_KEY`, `FIREBASE_SERVICE_ACCOUNT_PATH`) 및 Secret Files(`firebase-key.json`) 등록
+
+**본 프로젝트에는 이 자동화를 적용하지 않았습니다.** Render Free 플랜은 워크스페이스 전체에 걸쳐 월 750 instance-hours를 제공하는데, 이미 백엔드 Web Service가 상시 실행 중(한 달 약 730시간 소모)이라 Cron Job을 추가하면 무료 한도를 초과하여 유료 전환이 필요할 수 있습니다. 과제 성격상 별도 비용 지출은 지양하여, 필요 시 수동 갱신 방식을 사용하도록 구성했습니다.
+
 ### 백엔드
 
 ```bash
